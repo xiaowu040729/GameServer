@@ -1,9 +1,12 @@
 #pragma once
 #include<zinx.h>
 #include<google/protobuf/message.h>
+#include<list>
 #include"msg.pb.h"
+using namespace std;
 
-/*不同层之间传递的数据写成一个类*/
+/*不同层之间传递的消息写成一个类*/
+/*一条消息*/
 class GameMsg :
     public UserData
 {
@@ -35,5 +38,11 @@ public:
     /*序列化消息：把用户数据转化成二进制*/
     std::string Serialize_msg();
 
+};
+
+/*多条消息*/
+class MultMsgs : public UserData {
+public:
+   list<GameMsg*> msgs;    
 };
 

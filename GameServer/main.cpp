@@ -11,6 +11,7 @@ int main()
 	ZinxKernel::Zinx_Add_Channel(*(new ZinxTCPListen(8899,new GameChannelFactory())));
 
 
+
 	/*运行框架*/
 	ZinxKernel::Zinx_Run();
 	/*消除初始化*/
