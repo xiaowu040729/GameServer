@@ -26,15 +26,11 @@ int main()
 	auto ingm = GameMsg(GameMsg::MSG_TYPE_LOGIN_ID_NAME, input);
 	std::cout << dynamic_cast<pb::SyncPid*> (ingm.pMsg)->pid() << std::endl;
 	std::cout << dynamic_cast<pb::SyncPid*> (ingm.pMsg)->username() << std::endl;
-
+	/*调试结束*/
 	/*初始化框架*/
 	ZinxKernel::ZinxKernelInit();
-
 	/*添加监听通道，监听tcp请求*/
 	ZinxKernel::Zinx_Add_Channel(*(new ZinxTCPListen(8899,new GameChannelFactory())));
-
-
-		
 	/*运行框架*/
 	ZinxKernel::Zinx_Run();
 	/*消除初始化*/
