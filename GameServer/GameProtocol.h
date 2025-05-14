@@ -3,15 +3,14 @@
 #include<iostream>
 #include"GameMsg.h"
 #include<list>
+#include"msg.pb.h"
 using namespace std;
 /*协议层*/
 class GameProtocol :
     public Iprotocol
 {
     /*缓存报文*/
-    std::string msg;
-    /*用户请求*/
-    list<GameMsg*> game_request;
+    string msg;
 public:
    
     /*原始数据转化为目标数据*/

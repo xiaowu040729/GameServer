@@ -12,7 +12,7 @@ UserData* GameProtocol::raw2request(std::string _szInput)
         /*如果此次传入的字节数<8那么就直接等下一次数据到达再处理*/
         if (msg.size() < 8)
         {
-            return res;
+            break;
         }
 
         /*处理前四个字节*/
@@ -33,7 +33,7 @@ UserData* GameProtocol::raw2request(std::string _szInput)
         if (msg.size() - 8 < Byte_front_4)
         {
             /*不合法就等待下一次操作*/
-            return res;
+            break;
         }
 
         /*构造一条用户请求*/
@@ -42,13 +42,12 @@ UserData* GameProtocol::raw2request(std::string _szInput)
 
         /*弹出以处理成功的报文*/
         msg.erase(0, 8+Byte_front_4);
-
+            
         /*调试*/
         for (auto single : res->msgs)
         {
             cout << single->pMsg->Utf8DebugString() << endl;
         }
-
     }
     return res;
 }

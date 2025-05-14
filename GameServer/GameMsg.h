@@ -3,6 +3,7 @@
 #include<google/protobuf/message.h>
 #include<list>
 #include"msg.pb.h"
+#include<iostream>
 using namespace std;
 
 /*不同层之间传递的消息写成一个类*/
@@ -43,6 +44,6 @@ public:
 /*多条消息*/
 class MultMsgs : public UserData {
 public:
-   list<GameMsg*> msgs;    
+   std::list<GameMsg *> msgs;    
 };
 

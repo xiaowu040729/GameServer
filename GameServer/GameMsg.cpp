@@ -52,7 +52,7 @@ GameMsg::GameMsg(MSG_TYPE _msgtype, std::string _stream)
 			break;
 		}
 
-		/*将参数解析成对象内容*/
+		/*将参数解析成对象内容  ba把_stream放入pmsg*/
 		pMsg->ParseFromString(_stream);
 
 	}
@@ -61,6 +61,8 @@ GameMsg::GameMsg(MSG_TYPE _msgtype, std::string _stream)
 std::string GameMsg::Serialize_msg()
 {
 	std::string res;
+
 	pMsg->SerializePartialToString(&res);
+
 	return res;
 }
