@@ -12,7 +12,8 @@ class GameProtocol :
     /*缓存报文*/
     string msg;
 public:
-   
+    GameProtocol();
+    ~GameProtocol();
     /*原始数据转化为目标数据*/
     UserData* raw2request(std::string _szInput) override;
     /*响应数据转化为原始数据*/

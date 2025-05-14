@@ -15,10 +15,17 @@ int main()
 
 	for (auto byte : output)
 	{
-		printf("%02X", byte);
+		printf("%02X ", byte);
 	}
 
 	puts("");
+
+	char buff[] = { 0x08, 0x01, 0x12, 0x04 ,0x74, 0x65, 0x73, 0x74 };
+	std::string input(buff, sizeof(buff));
+
+	auto ingm = GameMsg(GameMsg::MSG_TYPE_LOGIN_ID_NAME, input);
+	std::cout << dynamic_cast<pb::SyncPid*> (ingm.pMsg)->pid() << std::endl;
+	std::cout << dynamic_cast<pb::SyncPid*> (ingm.pMsg)->username() << std::endl;
 
 	/*初始化框架*/
 	ZinxKernel::ZinxKernelInit();

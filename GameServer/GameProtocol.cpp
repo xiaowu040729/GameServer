@@ -1,9 +1,17 @@
 #include "GameProtocol.h"
 
+GameProtocol::GameProtocol()
+{
+}
+
+GameProtocol::~GameProtocol()
+{
+}
+
 /*返回转换后的消息对象MultMsg*/
 UserData* GameProtocol::raw2request(std::string _szInput)
 {
-   MultMsgs* res = nullptr;
+   MultMsgs* res =  new MultMsgs();
     /*前四个字节 四到八字节分别是 消息长度 消息ID*/
     msg.append(_szInput);
     /*不停的处理数据*/
@@ -41,11 +49,11 @@ UserData* GameProtocol::raw2request(std::string _szInput)
         res->msgs.push_back(pmsg);
 
         /*弹出以处理成功的报文*/
-        msg.erase(0, 8+Byte_front_4);
+        msg.erase(0, 8 + Byte_front_4);
             
         /*调试*/
         for (auto single : res->msgs)
-        {
+        {   
             cout << single->pMsg->Utf8DebugString() << endl;
         }
     }
