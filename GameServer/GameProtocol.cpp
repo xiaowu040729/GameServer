@@ -1,4 +1,5 @@
 #include "GameProtocol.h"
+#include"GameChannel.h"
 
 GameProtocol::GameProtocol()
 {
@@ -57,20 +58,61 @@ UserData* GameProtocol::raw2request(std::string _szInput)
             cout << single->pMsg->Utf8DebugString() << endl;
         }
     }
+
+    /*调试：接收到消息的同时发送一条信息*/
+    pb::Talk* pt = new pb::Talk();
+    pt->set_content("hello");
+    GameMsg* tmsg = new GameMsg(GameMsg::MSG_TYPE_CHAT_CONTENT, pt);
+    ZinxKernel::Zinx_SendOut(*(tmsg), *this);
     return res;
 }
 
+
+/*参数来自业务层，待发送的数据，转化成字符串*/
 std::string* GameProtocol::response2raw(UserData& _oUserData)
 {
-    return nullptr;
+
+    string *rstring = new string();
+    /*要发送的报文组成*/
+    int length = 0;
+    int id = 0;
+    string rmsg;
+    GET_REF2DATA(GameMsg, output, _oUserData);
+    
+    /*初始化报文*/
+    id = output.msgtype;
+    rmsg = output.Serialize_msg();
+    length = rmsg.size();
+
+    /*前4个字节放长度信息,低字节在前高字节在后*/
+    rstring->push_back((length >> 0) & 0xff);
+    rstring->push_back((length >> 8) & 0xff);
+    rstring->push_back((length >> 16) & 0xff);
+    rstring->push_back((length >> 24) & 0xff);
+
+    /*处理第5个字节到第8个字节*/
+    rstring->push_back((id >> 0) & 0xff);
+    rstring->push_back((id >> 8) & 0xff);
+    rstring->push_back((id >> 16) & 0xff);
+    rstring->push_back((id >> 24) & 0xff);
+
+    /*拼接第7个字节以后的数据*/
+    rstring->append(rmsg);
+
+
+    return rstring;
 }
+
 
 Irole* GameProtocol::GetMsgProcessor(UserDataMsg& _oUserDataMsg)
 {
+    /*处理完的数据再返回给对象*/
     return nullptr;
 }
 
+/*返回数据发送的通道*/
 Ichannel* GameProtocol::GetMsgSender(BytesMsg& _oBytes)
 {
-    return nullptr;
+    /*返回通道对象*/
+    return channel;
 }

@@ -4,16 +4,21 @@
 #include"GameMsg.h"
 #include<list>
 #include"msg.pb.h"
+
 using namespace std;
 /*协议层*/
+class GameChannel;
 class GameProtocol :
     public Iprotocol
 {
     /*缓存报文*/
     string msg;
+   
 public:
+    /*协议对象也绑定通道*/
+    GameChannel* channel = nullptr;
     GameProtocol();
-    ~GameProtocol();
+    ~GameProtocol();    
     /*原始数据转化为目标数据*/
     UserData* raw2request(std::string _szInput) override;
     /*响应数据转化为原始数据*/

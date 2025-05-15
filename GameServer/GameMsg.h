@@ -36,7 +36,8 @@ public:
     GameMsg(MSG_TYPE _msgtype, google::protobuf::Message* _pMsg);
     /*已知一个字节流转换成消息*/
     GameMsg(MSG_TYPE _msgtype, std::string _stream);
-    /*序列化消息：把用户数据转化成二进制*/
+    /*序列化是指将对象转换为便于存储或传输的格式*/
+    /*这里是转化为字符串形式*/
     std::string Serialize_msg();
 
 };

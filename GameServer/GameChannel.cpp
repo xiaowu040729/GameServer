@@ -14,6 +14,8 @@ GameChannel::~GameChannel()
 AZinxHandler* GameChannel::GetInputNextStage(BytesMsg& _oInput)
 {
     /*返回下一个处理对象*/
+
+
     return iprotocol;
 }
 
@@ -23,6 +25,8 @@ ZinxTcpData* GameChannelFactory::CreateTcpDataChannel(int _fd)
     auto channel = new GameChannel(_fd);
     /*创建通道对象里的协议对象*/
     channel->iprotocol = new GameProtocol();
+    /*协议对象也绑定通道*/
+    channel->iprotocol->channel = channel;
     /*将通道对象加入框架中*/
     ZinxKernel::Zinx_Add_Channel(*channel);
     return channel;
