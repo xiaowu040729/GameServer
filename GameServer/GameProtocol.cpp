@@ -64,6 +64,7 @@ UserData* GameProtocol::raw2request(std::string _szInput)
     pt->set_content("hello");
     GameMsg* tmsg = new GameMsg(GameMsg::MSG_TYPE_CHAT_CONTENT, pt);
     ZinxKernel::Zinx_SendOut(*(tmsg), *this);
+
     return res;
 }
 
