@@ -24,9 +24,20 @@ ZinxTcpData* GameChannelFactory::CreateTcpDataChannel(int _fd)
     /*创建通道对象*/
     auto channel = new GameChannel(_fd);
     /*创建通道对象里的协议对象*/
-    channel->iprotocol = new GameProtocol();
+    auto iprotocol = new GameProtocol();
+    /*创建玩家对象*/
+    auto irole = new GameRole();
+
+    /*通道对象绑定协议对象*/
+    channel->iprotocol = iprotocol;
     /*协议对象也绑定通道*/
-    channel->iprotocol->channel = channel;
+    iprotocol->channel = channel;
+
+    /*Role对象绑定协议对象*/
+    irole->protocol = iprotocol;
+    /*协议对象绑定Role对象*/
+    iprotocol->role = irole;
+
     /*将通道对象加入框架中*/
     ZinxKernel::Zinx_Add_Channel(*channel);
     return channel;

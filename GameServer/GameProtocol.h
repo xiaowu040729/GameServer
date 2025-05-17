@@ -4,6 +4,7 @@
 #include"GameMsg.h"
 #include<list>
 #include"msg.pb.h"
+#include"GameRole.h"
 
 using namespace std;
 /*协议层*/
@@ -14,7 +15,10 @@ class GameProtocol :
     /*缓存报文*/
     string msg;
    
+   
 public:
+    /*绑定的对象*/
+    GameRole* role;
     /*协议对象也绑定通道*/
     GameChannel* channel = nullptr;
     GameProtocol();
