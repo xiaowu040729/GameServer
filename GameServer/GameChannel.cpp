@@ -14,8 +14,6 @@ GameChannel::~GameChannel()
 AZinxHandler* GameChannel::GetInputNextStage(BytesMsg& _oInput)
 {
     /*返回下一个处理对象*/
-
-
     return iprotocol;
 }
 
