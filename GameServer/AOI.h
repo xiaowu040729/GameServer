@@ -7,15 +7,10 @@ using namespace std;
 class Player {
 public:
 	/*返回坐标位置*/
-	virtual int GetX() = 0;
-	virtual int GetY() = 0;
+	virtual int GetX();
+	virtual int GetY();
 
-private:
-	int x;
-	int y;
 };
-
-
 
 class Grid {
 public:
@@ -41,11 +36,13 @@ private:
 	int y_count;
 	int x_width;
 	int y_width;
+
+
 public:
 	AOIWORLD(int xbegin,int xend,int ybegin,int yend,int xcount,int ycount);
 	~AOIWORLD();
 	/*一块地图里有多个格子*/
-	vector<Grid*> AOIWorld;
+	vector<Grid*> AIOWorld;
 	
 	/*添加玩家*/
 	bool AddPlayer(Player * _player);
