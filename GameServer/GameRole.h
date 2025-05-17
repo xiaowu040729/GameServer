@@ -28,9 +28,12 @@ public:
     bool Init() override;
     UserData* ProcMsg(UserData& _poUserData) override;
     void Fini() override;
-
+    /*新客户连接后创建连接信息如ID Name等*/
     GameMsg* CreatLoginMsg();
-
+    /*给其发送周围玩家的信息*/
+    GameMsg* SendOthersToPlayer();
+    /*向周围玩家发送自己的位置*/
+    //GameMsg* SendPlayerToOthers();
 
 
     // 通过 Player 继承

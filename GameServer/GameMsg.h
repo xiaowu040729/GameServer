@@ -29,7 +29,7 @@ public:
         /*下线玩家的ID*/
         MSG_TYPE_LOGOUT_ID_NAME = 201,
         /*周围玩家的位置*/
-        MSG_TYPE_OTHERPLAYERPLACE = 203
+        MSG_TYPE_OTHERPLAYERPLACE = 202
     }msgtype;/*最后定义一个变量来存储*/
 
     /*已知消息内容创建消息对象*/
