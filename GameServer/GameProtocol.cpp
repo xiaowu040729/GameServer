@@ -1,6 +1,6 @@
 #include "GameProtocol.h"
 #include"GameChannel.h"
-
+#include"GameRole.h"
 GameProtocol::GameProtocol()
 {
 }
@@ -108,7 +108,7 @@ std::string* GameProtocol::response2raw(UserData& _oUserData)
 Irole* GameProtocol::GetMsgProcessor(UserDataMsg& _oUserDataMsg)
 {
     /*处理完的数据再返回给对象*/
-    return nullptr;
+    return role;
 }
 
 /*返回数据发送的通道*/

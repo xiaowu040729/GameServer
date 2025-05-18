@@ -4,15 +4,17 @@
 #include"GameChannel.h"
 
 
-AOIWORLD w(0, 400, 0, 400, 6, 6);
+static AOIWORLD w(0, 400, 0, 400, 20, 20);
 
 GameRole::GameRole()
 {
-   /*设置玩家的初始位置..*/
-
-
     /*测试一下，暂且设置名字为test*/
     usrname = "test";
+
+   /*设置玩家的初始位置..*/
+    x = 100;
+    z = 100;
+
 }
 
 GameRole::~GameRole()
@@ -36,8 +38,8 @@ bool GameRole::Init()
         ZinxKernel::Zinx_SendOut(*loginmsg, *protocol);
 
         /*用户上线后还需要给其发送周围玩家的信息*/
-        GameMsg* others = SendOthersToPlayer();
-        ZinxKernel::Zinx_SendOut(*others, *protocol);
+        loginmsg = SendOthersToPlayer();
+        ZinxKernel::Zinx_SendOut(*loginmsg, *protocol);
 
         /*向周围玩家发送该玩家自己的位置*/
 
@@ -70,16 +72,19 @@ GameMsg* GameRole::CreatLoginMsg()
 /*给其发送周围玩家的信息*/
 GameMsg* GameRole::SendOthersToPlayer()
 {
-    /*获得周围玩家*/
-    auto surplayer = w.SurroundPlayers(this);
     /*周围玩家们的信息*/
     pb::SyncPlayers* surplayers_msg = new pb::SyncPlayers();
+
+    /*获得周围玩家*/
+    auto surplayer = w.SurroundPlayers(this);
+   
     for (auto single : surplayer)
     {
-        /*single的类型是父类类型，所以需要强制转换成子类*/
-        auto pRole = dynamic_cast<GameRole*> (single);
         /*添加周围玩家的信息到surplayers中,并返回指向子消息的指针*/
         auto pPlayer = surplayers_msg->add_ps();
+        /*single的类型是父类类型，所以需要强制转换成子类*/
+        auto pRole = dynamic_cast<GameRole*>(single);
+        
         /*设置子消息的信息*/
         pPlayer->set_pid(pRole->id);
         pPlayer->set_username(pRole->usrname);

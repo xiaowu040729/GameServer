@@ -2,6 +2,7 @@
 #include<ZinxTCP.h>
 #include"GameProtocol.h"
 /*tcp通道类：用于传送TCP数据*/
+
 class GameChannel :
     public ZinxTcpData
 {
