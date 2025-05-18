@@ -33,7 +33,7 @@ public:
     /*给其发送周围玩家的信息*/
     GameMsg* SendOthersToPlayer();
     /*向周围玩家发送自己的位置*/
-    //GameMsg* SendPlayerToOthers();
+    GameMsg* SendPlayerToOthers();
 
 
     // 通过 Player 继承

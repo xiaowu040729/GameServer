@@ -10,11 +10,9 @@ GameRole::GameRole()
 {
     /*测试一下，暂且设置名字为test*/
     usrname = "test";
-
-   /*设置玩家的初始位置..*/
+   /*设置玩家的初始位置*/
     x = 100;
     z = 100;
-
 }
 
 GameRole::~GameRole()
@@ -42,8 +40,13 @@ bool GameRole::Init()
         ZinxKernel::Zinx_SendOut(*loginmsg, *protocol);
 
         /*向周围玩家发送该玩家自己的位置*/
-
-
+        auto srdplayer = w.SurroundPlayers(this);
+        for (auto single : srdplayer)
+        {
+            auto role = dynamic_cast<GameRole*>(single);
+            loginmsg = SendPlayerToOthers();
+            ZinxKernel::Zinx_SendOut(*loginmsg,*(role->protocol));
+        }
     }
    
   
@@ -98,6 +101,26 @@ GameMsg* GameRole::SendOthersToPlayer()
     }
     GameMsg* surmsg = new GameMsg(GameMsg::MSG_TYPE_OTHERPLAYERPLACE, surplayers_msg);
     return surmsg;
+}
+
+GameMsg* GameRole::SendPlayerToOthers()
+{
+    /*广播消息*/
+    pb::BroadCast * pmsg = new pb::BroadCast();
+    pmsg->set_pid(id);
+    pmsg->set_username(usrname);
+
+    /*客户端规定 如果tp设置为1则为聊天消息 tp为2则为初始位置消息*/
+    pmsg->set_tp(2);
+
+    /*设置父消息里的子消息*/
+    auto position = pmsg->mutable_p();  
+    position->set_x(x);
+    position->set_y(y);
+    position->set_z(z);
+    position->set_v(v);
+    GameMsg* res = new GameMsg(GameMsg::MSG_TYPE_BROADCAST,pmsg);
+    return res;
 }
 
 
