@@ -7,6 +7,11 @@ GameProtocol::GameProtocol()
 
 GameProtocol::~GameProtocol()
 {
+    if (NULL != role)
+    {
+        ZinxKernel::Zinx_Del_Role(*role);
+        delete role;
+    }
 }
 
 /*返回转换后的消息对象MultMsg*/

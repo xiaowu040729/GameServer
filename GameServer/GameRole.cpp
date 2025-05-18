@@ -58,8 +58,20 @@ UserData* GameRole::ProcMsg(UserData& _poUserData)
     return nullptr;
 }
 
+/*在对象从框架里摘除的时候会使用*/
 void GameRole::Fini()
 {
+    /*向周围玩家发送该玩玩家下线的消息*/
+    auto srdplayer = w.SurroundPlayers(this);
+    
+    for (auto single : srdplayer)
+    {
+        auto role = dynamic_cast<GameRole*>(single);
+       auto logoutmsg = CreatLoginMsg();
+        ZinxKernel::Zinx_SendOut(*logoutmsg, *(role->protocol));
+    }
+
+    w.DeletePlayer(this);
 }
 
 /*返回玩家登录的信息*/
@@ -120,6 +132,16 @@ GameMsg* GameRole::SendPlayerToOthers()
     position->set_z(z);
     position->set_v(v);
     GameMsg* res = new GameMsg(GameMsg::MSG_TYPE_BROADCAST,pmsg);
+    return res;
+}
+
+/*下线消息*/
+GameMsg* GameRole::CreateLogoutMsg()
+{
+    pb::BroadCast* pmsg = new pb::BroadCast();
+    pmsg->set_pid(id);
+    pmsg->set_username(usrname);    
+    GameMsg* res = new GameMsg(GameMsg::MSG_TYPE_BROADCAST, pmsg);
     return res;
 }
 

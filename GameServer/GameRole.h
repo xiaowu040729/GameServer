@@ -34,6 +34,8 @@ public:
     GameMsg* SendOthersToPlayer();
     /*向周围玩家发送自己的位置*/
     GameMsg* SendPlayerToOthers();
+    /*玩家下线通知*/
+    GameMsg* CreateLogoutMsg();
 
 
     // 通过 Player 继承
