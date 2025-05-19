@@ -55,6 +55,70 @@ bool GameRole::Init()
 
 UserData* GameRole::ProcMsg(UserData& _poUserData)
 {
+    /*格式化消息*/
+    GET_REF2DATA(MultMsgs, input, _poUserData);
+    /*取出消息*/
+    for (auto single : input.msgs)
+    {
+        /*如果是聊天消息*/
+        if (GameMsg::MSG_TYPE_CHAT_CONTENT == single->msgtype)
+        {
+            /*取出聊天内容*/
+            auto content = dynamic_cast<pb::Talk*> (single->pMsg)->content();
+            /*取出世界里的所有玩家*/
+            auto list_players = ZinxKernel::Zinx_GetAllRole();
+            /*向玩家发送消息*/
+            for (auto player : list_players)
+            {
+                auto role = dynamic_cast<GameRole*> (player);
+                auto pmsg = SendBroadCast(content);
+                ZinxKernel::Zinx_SendOut(*pmsg, *(role->protocol));
+            }
+
+        }
+
+        /*如果是玩家移动消息*/
+        if (GameMsg::MSG_TYPE_NEW_PLACE == single->msgtype)
+        {
+            /*更新玩家在地图网格中的位置*/
+           
+            /*更新别的玩家的周围玩家的范围*/
+
+            /*遍历周围玩家发送消息*/
+            auto player_list = w.SurroundPlayers(this);
+            /*调试*/
+            for (auto player : player_list)
+            {
+                auto role = dynamic_cast<GameRole*> (player);
+                cout << role->id << " " << role->usrname;
+                cout << endl;
+            }
+            /*向所有玩家发送聊天信息*/
+            for (auto player : player_list)
+            {
+                /*组成要发送的报文*/
+                auto NewPosition = dynamic_cast<pb::Position*> (single->pMsg);
+                auto broadmsg = new pb::BroadCast();
+                auto setposition = broadmsg->mutable_p(); /*返回复合消息的指针*/
+                setposition->set_x(NewPosition->x());
+                setposition->set_y(NewPosition->y());
+                setposition->set_z(NewPosition->z());
+                setposition->set_v(NewPosition->v());
+                broadmsg->set_pid(id);
+                broadmsg->set_username(usrname);
+                broadmsg->set_tp(4);
+                /*发送消息*/
+                auto role = dynamic_cast<GameRole*> (player);
+                GameMsg* pmsg = new GameMsg(GameMsg::MSG_TYPE_BROADCAST, broadmsg);
+                ZinxKernel::Zinx_SendOut(*pmsg, *(role->protocol));
+            }
+
+        }
+
+
+    }
+
+    
     return nullptr;
 }
 
@@ -141,6 +205,18 @@ GameMsg* GameRole::CreateLogoutMsg()
     pb::BroadCast* pmsg = new pb::BroadCast();
     pmsg->set_pid(id);
     pmsg->set_username(usrname);    
+    GameMsg* res = new GameMsg(GameMsg::MSG_TYPE_BROADCAST, pmsg);
+    return res;
+}
+
+/*聊天消息*/
+GameMsg* GameRole::SendBroadCast(string content)
+{
+    pb::BroadCast* pmsg = new pb::BroadCast();
+    pmsg->set_pid(id);
+    pmsg->set_username(usrname);
+    pmsg->set_tp(1);
+    pmsg->set_content(content);
     GameMsg* res = new GameMsg(GameMsg::MSG_TYPE_BROADCAST, pmsg);
     return res;
 }

@@ -36,6 +36,8 @@ public:
     GameMsg* SendPlayerToOthers();
     /*玩家下线通知*/
     GameMsg* CreateLogoutMsg();
+    /*发送聊天消息*/
+    GameMsg* SendBroadCast(string content);
 
 
     // 通过 Player 继承
@@ -43,8 +45,5 @@ public:
     int GetY() override;
 
     
-
-
-
 };
 

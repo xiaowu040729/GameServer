@@ -12,7 +12,7 @@ GameMsg::GameMsg(MSG_TYPE _msgtype, google::protobuf::Message* _pMsg):msgtype(_m
 
 }
 
-GameMsg::GameMsg(MSG_TYPE _msgtype, std::string _stream)
+GameMsg::GameMsg(MSG_TYPE _msgtype, std::string _stream) : msgtype(_msgtype)
 {
 	/*通过消息工厂创建消息对象*/
 	switch (_msgtype)
@@ -55,6 +55,7 @@ GameMsg::GameMsg(MSG_TYPE _msgtype, std::string _stream)
 	}
 	/*将参数解析成对象内容  ba把_stream放入pmsg*/
 	pMsg->ParseFromString(_stream);
+
 }
 
 std::string GameMsg::Serialize_msg()
