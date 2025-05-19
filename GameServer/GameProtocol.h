@@ -4,11 +4,12 @@
 #include"GameMsg.h"
 #include<list>
 #include"msg.pb.h"
-#include"GameRole.h"
 
+class GameRole;
 using namespace std;
 /*–≠“È≤„*/
 class GameChannel;
+
 class GameProtocol :
     public Iprotocol
 {

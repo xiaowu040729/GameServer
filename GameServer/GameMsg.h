@@ -12,7 +12,7 @@ class GameMsg :
     public UserData
 {
 public:
-   
+
     ~GameMsg();
     /*客户端的请求信息*/
     google::protobuf::Message* pMsg = NULL;

@@ -8,7 +8,7 @@
 class GameProtocol;
 /*业务层：用于对象处理业务*/
 class GameRole :
-    public Irole,Player
+    public Irole,public Player
 {
 private:
     float x = 0;
@@ -33,7 +33,11 @@ public:
     /*给其发送周围玩家的信息*/
     GameMsg* SendOthersToPlayer();
     /*向周围玩家发送自己的位置*/
-    //GameMsg* SendPlayerToOthers();
+    GameMsg* SendPlayerToOthers();
+    /*玩家下线通知*/
+    GameMsg* CreateLogoutMsg();
+    /*发送聊天消息*/
+    GameMsg* SendBroadCast(string content);
 
 
     // 通过 Player 继承
@@ -41,8 +45,5 @@ public:
     int GetY() override;
 
     
-
-
-
 };
 

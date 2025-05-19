@@ -1,5 +1,5 @@
 #include "GameChannel.h"
-
+#include"GameRole.h"
 
 
 GameChannel::GameChannel(int _fd) : ZinxTcpData(_fd)
@@ -9,6 +9,11 @@ GameChannel::GameChannel(int _fd) : ZinxTcpData(_fd)
 
 GameChannel::~GameChannel()
 {
+    if (NULL != iprotocol)
+    {
+        ZinxKernel::Zinx_Del_Proto(*iprotocol);
+        delete iprotocol;
+    }
 }
 
 AZinxHandler* GameChannel::GetInputNextStage(BytesMsg& _oInput)
@@ -36,7 +41,11 @@ ZinxTcpData* GameChannelFactory::CreateTcpDataChannel(int _fd)
     /*协议对象绑定Role对象*/
     iprotocol->role = irole;
 
-    /*将通道对象加入框架中*/
-    ZinxKernel::Zinx_Add_Channel(*channel);
+    /*将协议对象加入框架中*/
+    ZinxKernel::Zinx_Add_Proto(*iprotocol);
+
+    /*将玩家对象加入框架中*/
+    ZinxKernel::Zinx_Add_Role(*irole);
+
     return channel;
 }

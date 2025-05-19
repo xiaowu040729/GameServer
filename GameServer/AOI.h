@@ -7,8 +7,13 @@ using namespace std;
 class Player {
 public:
 	/*·µ»Ø×ø±êÎ»ÖÃ*/
-	virtual int GetX();
-	virtual int GetY();
+
+	virtual int GetX() = 0;
+	virtual int GetY() = 0;
+	
+private:
+	int x;
+	int y;
 
 };
 

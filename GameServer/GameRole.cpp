@@ -4,15 +4,15 @@
 #include"GameChannel.h"
 
 
-AOIWORLD w(0, 400, 0, 400, 6, 6);
+static AOIWORLD w(0, 400, 0, 400, 20, 20);
 
 GameRole::GameRole()
 {
-   /*设置玩家的初始位置..*/
-
-
     /*测试一下，暂且设置名字为test*/
     usrname = "test";
+   /*设置玩家的初始位置*/
+    x = 100;
+    z = 100;
 }
 
 GameRole::~GameRole()
@@ -36,12 +36,17 @@ bool GameRole::Init()
         ZinxKernel::Zinx_SendOut(*loginmsg, *protocol);
 
         /*用户上线后还需要给其发送周围玩家的信息*/
-        GameMsg* others = SendOthersToPlayer();
-        ZinxKernel::Zinx_SendOut(*others, *protocol);
+        loginmsg = SendOthersToPlayer();
+        ZinxKernel::Zinx_SendOut(*loginmsg, *protocol);
 
         /*向周围玩家发送该玩家自己的位置*/
-
-
+        auto srdplayer = w.SurroundPlayers(this);
+        for (auto single : srdplayer)
+        {
+            auto role = dynamic_cast<GameRole*>(single);
+            loginmsg = SendPlayerToOthers();
+            ZinxKernel::Zinx_SendOut(*loginmsg,*(role->protocol));
+        }
     }
    
   
@@ -50,11 +55,87 @@ bool GameRole::Init()
 
 UserData* GameRole::ProcMsg(UserData& _poUserData)
 {
+    /*格式化消息*/
+    GET_REF2DATA(MultMsgs, input, _poUserData);
+    /*取出消息*/
+    for (auto single : input.msgs)
+    {
+        /*如果是聊天消息*/
+        if (GameMsg::MSG_TYPE_CHAT_CONTENT == single->msgtype)
+        {
+            /*取出聊天内容*/
+            auto content = dynamic_cast<pb::Talk*> (single->pMsg)->content();
+            /*取出世界里的所有玩家*/
+            auto list_players = ZinxKernel::Zinx_GetAllRole();
+            /*向玩家发送消息*/
+            for (auto player : list_players)
+            {
+                auto role = dynamic_cast<GameRole*> (player);
+                auto pmsg = SendBroadCast(content);
+                ZinxKernel::Zinx_SendOut(*pmsg, *(role->protocol));
+            }
+
+        }
+
+        /*如果是玩家移动消息*/
+        if (GameMsg::MSG_TYPE_NEW_PLACE == single->msgtype)
+        {
+            /*更新玩家在地图网格中的位置*/
+           
+            /*更新别的玩家的周围玩家的范围*/
+
+            /*遍历周围玩家发送消息*/
+            auto player_list = w.SurroundPlayers(this);
+            /*调试*/
+            for (auto player : player_list)
+            {
+                auto role = dynamic_cast<GameRole*> (player);
+                cout << role->id << " " << role->usrname;
+                cout << endl;
+            }
+            /*向所有玩家发送聊天信息*/
+            for (auto player : player_list)
+            {
+                /*组成要发送的报文*/
+                auto NewPosition = dynamic_cast<pb::Position*> (single->pMsg);
+                auto broadmsg = new pb::BroadCast();
+                auto setposition = broadmsg->mutable_p(); /*返回复合消息的指针*/
+                setposition->set_x(NewPosition->x());
+                setposition->set_y(NewPosition->y());
+                setposition->set_z(NewPosition->z());
+                setposition->set_v(NewPosition->v());
+                broadmsg->set_pid(id);
+                broadmsg->set_username(usrname);
+                broadmsg->set_tp(4);
+                /*发送消息*/
+                auto role = dynamic_cast<GameRole*> (player);
+                GameMsg* pmsg = new GameMsg(GameMsg::MSG_TYPE_BROADCAST, broadmsg);
+                ZinxKernel::Zinx_SendOut(*pmsg, *(role->protocol));
+            }
+
+        }
+
+
+    }
+
+    
     return nullptr;
 }
 
+/*在对象从框架里摘除的时候会使用*/
 void GameRole::Fini()
 {
+    /*向周围玩家发送该玩玩家下线的消息*/
+    auto srdplayer = w.SurroundPlayers(this);
+    
+    for (auto single : srdplayer)
+    {
+        auto role = dynamic_cast<GameRole*>(single);
+       auto logoutmsg = CreatLoginMsg();
+        ZinxKernel::Zinx_SendOut(*logoutmsg, *(role->protocol));
+    }
+
+    w.DeletePlayer(this);
 }
 
 /*返回玩家登录的信息*/
@@ -70,16 +151,19 @@ GameMsg* GameRole::CreatLoginMsg()
 /*给其发送周围玩家的信息*/
 GameMsg* GameRole::SendOthersToPlayer()
 {
-    /*获得周围玩家*/
-    auto surplayer = w.SurroundPlayers(this);
     /*周围玩家们的信息*/
     pb::SyncPlayers* surplayers_msg = new pb::SyncPlayers();
+
+    /*获得周围玩家*/
+    auto surplayer = w.SurroundPlayers(this);
+   
     for (auto single : surplayer)
     {
-        /*single的类型是父类类型，所以需要强制转换成子类*/
-        auto pRole = dynamic_cast<GameRole*> (single);
         /*添加周围玩家的信息到surplayers中,并返回指向子消息的指针*/
         auto pPlayer = surplayers_msg->add_ps();
+        /*single的类型是父类类型，所以需要强制转换成子类*/
+        auto pRole = dynamic_cast<GameRole*>(single);
+        
         /*设置子消息的信息*/
         pPlayer->set_pid(pRole->id);
         pPlayer->set_username(pRole->usrname);
@@ -93,6 +177,48 @@ GameMsg* GameRole::SendOthersToPlayer()
     }
     GameMsg* surmsg = new GameMsg(GameMsg::MSG_TYPE_OTHERPLAYERPLACE, surplayers_msg);
     return surmsg;
+}
+
+GameMsg* GameRole::SendPlayerToOthers()
+{
+    /*广播消息*/
+    pb::BroadCast * pmsg = new pb::BroadCast();
+    pmsg->set_pid(id);
+    pmsg->set_username(usrname);
+
+    /*客户端规定 如果tp设置为1则为聊天消息 tp为2则为初始位置消息*/
+    pmsg->set_tp(2);
+
+    /*设置父消息里的子消息*/
+    auto position = pmsg->mutable_p();  
+    position->set_x(x);
+    position->set_y(y);
+    position->set_z(z);
+    position->set_v(v);
+    GameMsg* res = new GameMsg(GameMsg::MSG_TYPE_BROADCAST,pmsg);
+    return res;
+}
+
+/*下线消息*/
+GameMsg* GameRole::CreateLogoutMsg()
+{
+    pb::BroadCast* pmsg = new pb::BroadCast();
+    pmsg->set_pid(id);
+    pmsg->set_username(usrname);    
+    GameMsg* res = new GameMsg(GameMsg::MSG_TYPE_BROADCAST, pmsg);
+    return res;
+}
+
+/*聊天消息*/
+GameMsg* GameRole::SendBroadCast(string content)
+{
+    pb::BroadCast* pmsg = new pb::BroadCast();
+    pmsg->set_pid(id);
+    pmsg->set_username(usrname);
+    pmsg->set_tp(1);
+    pmsg->set_content(content);
+    GameMsg* res = new GameMsg(GameMsg::MSG_TYPE_BROADCAST, pmsg);
+    return res;
 }
 
 

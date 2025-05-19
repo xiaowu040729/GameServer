@@ -1,12 +1,17 @@
 #include "GameProtocol.h"
 #include"GameChannel.h"
-
+#include"GameRole.h"
 GameProtocol::GameProtocol()
 {
 }
 
 GameProtocol::~GameProtocol()
 {
+    if (NULL != role)
+    {
+        ZinxKernel::Zinx_Del_Role(*role);
+        delete role;
+    }
 }
 
 /*返回转换后的消息对象MultMsg*/
@@ -51,19 +56,15 @@ UserData* GameProtocol::raw2request(std::string _szInput)
 
         /*弹出以处理成功的报文*/
         msg.erase(0, 8 + Byte_front_4);
-            
+          
         /*调试*/
-        for (auto single : res->msgs)
+      for (auto single : res->msgs)
         {   
             cout << single->pMsg->Utf8DebugString() << endl;
         }
     }
 
-    /*调试：接收到消息的同时发送一条信息*/
-    pb::Talk* pt = new pb::Talk();
-    pt->set_content("hello");
-    GameMsg* tmsg = new GameMsg(GameMsg::MSG_TYPE_CHAT_CONTENT, pt);
-    ZinxKernel::Zinx_SendOut(*(tmsg), *this);
+
 
     return res;
 }
@@ -108,7 +109,7 @@ std::string* GameProtocol::response2raw(UserData& _oUserData)
 Irole* GameProtocol::GetMsgProcessor(UserDataMsg& _oUserDataMsg)
 {
     /*处理完的数据再返回给对象*/
-    return nullptr;
+    return role;
 }
 
 /*返回数据发送的通道*/
