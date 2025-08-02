@@ -6,6 +6,28 @@
 
 static AOIWORLD w(0, 400, 0, 400, 20, 20);
 
+void GameRole::ViewAppear(GameRole* _pRole)
+{
+    /*向自己发参数的200消息*/
+    auto pmsg = _pRole->SendPlayerToOthers();
+    ZinxKernel::Zinx_SendOut(*pmsg, *protocol);
+
+    /*向参数玩家发自己的200消息*/
+    pmsg = SendPlayerToOthers();
+    ZinxKernel::Zinx_SendOut(*pmsg, *(_pRole->protocol));
+}
+
+void GameRole::viewDisappear(GameRole* _pRole)
+{
+    /*向自己发参数的201消息*/
+	auto pmsg = _pRole->CreateLogoutMsg();
+	ZinxKernel::Zinx_SendOut(*pmsg, *protocol);
+
+	/*向参数玩家发自己的201消息*/
+	pmsg = CreateLogoutMsg();
+	ZinxKernel::Zinx_SendOut(*pmsg, *(_pRole->protocol));
+}
+
 GameRole::GameRole()
 {
     /*测试一下，暂且设置名字为test*/
@@ -81,18 +103,40 @@ UserData* GameRole::ProcMsg(UserData& _poUserData)
         if (GameMsg::MSG_TYPE_NEW_PLACE == single->msgtype)
         {
             /*更新玩家在地图网格中的位置*/
+            auto NewPosition = dynamic_cast<pb::Position*> (single->pMsg);
+            auto s1 = w.SurroundPlayers(this);
+            /*摘出旧格子,更新坐标,添加新格子，获取新邻居s2*/
+            w.DeletePlayer(this);
            
-            /*更新别的玩家的周围玩家的范围*/
+            x = NewPosition->x();
+            y = NewPosition->y();
+            z = NewPosition->z();
+            v = NewPosition->v();
+            w.AddPlayer(this);
+
+            auto s2 = w.SurroundPlayers(this);
+            /*遍历s2，若元素不属于s1, 视野出现*/
+            for (auto single_player : s2)
+            {
+                if (s1.end() == find(s1.begin(), s1.end(), single_player))
+                {
+                    //视野出现
+                    ViewAppear(dynamic_cast<GameRole*>(single_player));
+                }
+            }
+            /*遍历s1，若元素不属于s2，视野消失*/
+            for (auto single_player : s1)
+            {
+                if (s2.end() == find(s2.begin(), s2.end(), single_player))
+                {
+                    //视野消失
+                    viewDisappear(dynamic_cast<GameRole*>(single_player));
+                }
+            }
 
             /*遍历周围玩家发送消息*/
             auto player_list = w.SurroundPlayers(this);
-            /*调试*/
-            for (auto player : player_list)
-            {
-                auto role = dynamic_cast<GameRole*> (player);
-                cout << role->id << " " << role->usrname;
-                cout << endl;
-            }
+            
             /*向所有玩家发送聊天信息*/
             for (auto player : player_list)
             {
@@ -131,7 +175,7 @@ void GameRole::Fini()
     for (auto single : srdplayer)
     {
         auto role = dynamic_cast<GameRole*>(single);
-       auto logoutmsg = CreatLoginMsg();
+       auto logoutmsg = CreateLogoutMsg();
         ZinxKernel::Zinx_SendOut(*logoutmsg, *(role->protocol));
     }
 
@@ -202,11 +246,11 @@ GameMsg* GameRole::SendPlayerToOthers()
 /*下线消息*/
 GameMsg* GameRole::CreateLogoutMsg()
 {
-    pb::BroadCast* pmsg = new pb::BroadCast();
+    pb::SyncPid* pmsg = new pb::SyncPid();
     pmsg->set_pid(id);
-    pmsg->set_username(usrname);    
-    GameMsg* res = new GameMsg(GameMsg::MSG_TYPE_BROADCAST, pmsg);
-    return res;
+    pmsg->set_username(usrname);
+    GameMsg* pRet = new GameMsg(GameMsg::MSG_TYPE_LOGOUT_ID_NAME, pmsg);
+    return pRet;
 }
 
 /*聊天消息*/

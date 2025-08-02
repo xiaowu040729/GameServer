@@ -28,7 +28,7 @@ AOIWORLD::~AOIWORLD()
 bool AOIWORLD::AddPlayer(Player* _player)
 {
 	/*计算玩家位置*/
-	int grid = (_player->GetX() - w_xbegin) / x_width + (_player->GetY()) / y_width * x_count; 
+	int grid = (_player->GetX() - w_xbegin) / x_width + ((_player->GetY() - w_ybegin) / y_width) * x_count;
 	/*把玩家加入AOIWorld中*/
 	AOIWorld[grid]->players.push_back(_player);
 	return true;
@@ -37,7 +37,7 @@ bool AOIWORLD::AddPlayer(Player* _player)
 /*删除玩家*/
 void AOIWORLD::DeletePlayer(Player* _player)
 {
-	int grid = (_player->GetX() - w_xbegin) / x_width + (_player->GetY()) / y_width * x_count;
+	int grid = (_player->GetX() - w_xbegin) / x_width + ((_player->GetY() - w_ybegin) / y_width) * x_count;
 	/*把玩家加入AOIWorld中*/
 	AOIWorld[grid]->players.remove(_player);
 }
@@ -47,7 +47,7 @@ list<Player*> AOIWORLD::SurroundPlayers(Player * _player)
 {
 	list<Player*> surround_players;
 	/*计算玩家所在的格子*/
-	int grid = (_player->GetX() - w_xbegin) / x_width + (_player->GetY()) / y_width * x_count;
+	int grid = (_player->GetX() - w_xbegin) / x_width + ((_player->GetY() - w_ybegin) / y_width) * x_count;
 	
 	/*玩家所在格子的x的格子的数量和y格子的数量*/
 	int x_index = grid % x_count;
@@ -70,7 +70,7 @@ list<Player*> AOIWORLD::SurroundPlayers(Player * _player)
 	}
 
 	/*右上角格子是合法的*/
-	if (x_index < x_count - 1 && y_index > 0)	
+	if (x_index < x_count - 1 && y_index > 0)
 	{
 		list<Player*>& tmp = AOIWorld[grid - x_count + 1]->players;
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
@@ -94,10 +94,10 @@ list<Player*> AOIWORLD::SurroundPlayers(Player * _player)
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 	}
 
-	/*玩家右下角的格子是合法的*/
+	/*玩家左下角的格子是合法的*/
 	if (x_index > 0 && y_index < y_count - 1)		
 	{
-		list<Player*>& tmp = AOIWorld[grid + x_count + 1]->players;
+		list<Player*>& tmp = AOIWorld[grid + x_count - 1]->players;
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 	}
 
@@ -108,10 +108,10 @@ list<Player*> AOIWORLD::SurroundPlayers(Player * _player)
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 	}
 
-	/*玩家左下角的格子是合法的*/
+	/*玩家右下角的格子是合法的*/
 	if (x_index < x_count - 1 && y_index < y_count - 1)			
 	{
-		list<Player*>& tmp = AOIWorld[grid + x_count - 1]->players;
+		list<Player*>& tmp = AOIWorld[grid + x_count + 1]->players;
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 	}
 	return surround_players;

@@ -17,7 +17,8 @@ private:
     float v = 0;    /*йс╫г*/
     int id = 0;
     string usrname;
-
+    void ViewAppear(GameRole* _pRole);
+    void viewDisappear(GameRole* _pRole);
 
 public:
     GameRole();

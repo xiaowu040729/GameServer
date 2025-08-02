@@ -23,7 +23,7 @@ int main()
 {
 	///*调试AOI功能*/
 	//{
-	//	AOIWORLD w(20, 200, 50, 230, 6, 6);
+	// 
 	//	MyPlayer p1(60, 107, "1");
 	//	MyPlayer p2(91, 118, "2");
 	//	MyPlayer p3(147, 133, "3");
