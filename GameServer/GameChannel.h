@@ -1,7 +1,7 @@
 #pragma once
 #include<ZinxTCP.h>
 #include"GameProtocol.h"
-/*tcpÍ¨µÀÀà£ºÓÃÓÚ´«ËÍTCPÊı¾İ*/
+/*tcpé€šé“ç±»ï¼šç”¨äºä¼ é€TCPæ•°æ®*/
 
 class GameChannel :
     public ZinxTcpData
@@ -9,19 +9,19 @@ class GameChannel :
 public:
     GameChannel(int _fd);
     virtual ~GameChannel();
-    /*ÔÚÃ¿¸öÍ¨µÀ¶¼°ó¶¨Ò»¸öĞ­Òé¶ÔÏó£¬ÒÔºó¸ÃÍ¨µÀµÄĞÅÏ¢¶¼½»¸ø×Ô¼ºµÄĞ­Òé¶ÔÏó´¦Àí*/
+    /*åœ¨æ¯ä¸ªé€šé“éƒ½ç»‘å®šä¸€ä¸ªåè®®å¯¹è±¡ï¼Œä»¥åè¯¥é€šé“çš„ä¿¡æ¯éƒ½äº¤ç»™è‡ªå·±çš„åè®®å¯¹è±¡å¤„ç†*/
     GameProtocol* iprotocol =  nullptr;
     
-    /* ·µ»ØÒ»¸öĞ­Òé¶ÔÏó*/
+    /* è¿”å›ä¸€ä¸ªåè®®å¯¹è±¡*/
     AZinxHandler* GetInputNextStage(BytesMsg& _oInput) override;
 };
 
 
-/*´´½¨channel¶ÔÏó*/
+/*åˆ›å»ºchannelå¯¹è±¡*/
 class GameChannelFactory : public IZinxTcpConnFact {
 public:
 
-    /*´´½¨tcpÍ¨µÀ*/
+    /*åˆ›å»ºtcpé€šé“*/
     ZinxTcpData* CreateTcpDataChannel(int _fd) override;
 
 };

@@ -384,3 +384,7 @@ logs/
 *.swp
 *.swo
 *~
+
+# 临时文件
+*.utf8
+fix_*.py

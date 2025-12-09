@@ -7,30 +7,30 @@
 
 class GameRole;
 using namespace std;
-/*Ğ­Òé²ã*/
+/*åè®®å±‚*/
 class GameChannel;
 
 class GameProtocol :
     public Iprotocol
 {
-    /*»º´æ±¨ÎÄ*/
+    /*ç¼“å­˜æŠ¥æ–‡*/
     string msg;
    
    
 public:
-    /*°ó¶¨µÄ¶ÔÏó*/
+    /*ç»‘å®šçš„å¯¹è±¡*/
     GameRole* role;
-    /*Ğ­Òé¶ÔÏóÒ²°ó¶¨Í¨µÀ*/
+    /*åè®®å¯¹è±¡ä¹Ÿç»‘å®šé€šé“*/
     GameChannel* channel = nullptr;
     GameProtocol();
     ~GameProtocol();    
-    /*Ô­Ê¼Êı¾İ×ª»¯ÎªÄ¿±êÊı¾İ*/
+    /*åŸå§‹æ•°æ®è½¬åŒ–ä¸ºç›®æ ‡æ•°æ®*/
     UserData* raw2request(std::string _szInput) override;
-    /*ÏìÓ¦Êı¾İ×ª»¯ÎªÔ­Ê¼Êı¾İ*/
+    /*å“åº”æ•°æ®è½¬åŒ–ä¸ºåŸå§‹æ•°æ®*/
     std::string* response2raw(UserData& _oUserData) override;
-    /*·µ»ØÊı¾İ´¦Àí¶ÔÏó*/
+    /*è¿”å›æ•°æ®å¤„ç†å¯¹è±¡*/
     Irole* GetMsgProcessor(UserDataMsg& _oUserDataMsg) override;
-    /*·µ»Ø·¢ËÍÊı¾İÍ¨µÀ*/
+    /*è¿”å›å‘é€æ•°æ®é€šé“*/
     Ichannel* GetMsgSender(BytesMsg& _oBytes) override;
 };
 

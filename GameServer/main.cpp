@@ -1,4 +1,4 @@
-﻿#include<zinx.h>
+#include<zinx.h>
 #include"GameChannel.h"
 #include"GameMsg.h"
 #include"msg.pb.h"
@@ -8,18 +8,7 @@
 
 
 
-class MyPlayer : public Player {
-	// 通过 Player 继承
-public:
-	MyPlayer(int _x, int _y,string _name) : x(_x), y(_y),name(_name) {};
-	int GetX() override;
-	int GetY() override;
-	string GetName();
-private:
-	int x;
-	int y;
-	string name;
-};
+
 int main()
 {
 	
@@ -50,17 +39,3 @@ int main()
 	return 0;
 }
 
-int MyPlayer::GetX()
-{
-	return x;
-}
-
-int MyPlayer::GetY()
-{
-	return y;
-}
-
-string MyPlayer::GetName()
-{
-	return name;
-}

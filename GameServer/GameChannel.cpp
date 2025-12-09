@@ -18,33 +18,33 @@ GameChannel::~GameChannel()
 
 AZinxHandler* GameChannel::GetInputNextStage(BytesMsg& _oInput)
 {
-    /*·µ»ØÏÂÒ»¸ö´¦Àí¶ÔÏó*/
+    /*è¿”å›ä¸‹ä¸€ä¸ªå¤„ç†å¯¹è±¡*/
     return iprotocol;
 }
 
 ZinxTcpData* GameChannelFactory::CreateTcpDataChannel(int _fd)
 {
-    /*´´½¨Í¨µÀ¶ÔÏó*/
+    /*åˆ›å»ºé€šé“å¯¹è±¡*/
     auto channel = new GameChannel(_fd);
-    /*´´½¨Í¨µÀ¶ÔÏóÀïµÄĞ­Òé¶ÔÏó*/
+    /*åˆ›å»ºé€šé“å¯¹è±¡é‡Œçš„åè®®å¯¹è±¡*/
     auto iprotocol = new GameProtocol();
-    /*´´½¨Íæ¼Ò¶ÔÏó*/
+    /*åˆ›å»ºç©å®¶å¯¹è±¡*/
     auto irole = new GameRole();
 
-    /*Í¨µÀ¶ÔÏó°ó¶¨Ğ­Òé¶ÔÏó*/
+    /*é€šé“å¯¹è±¡ç»‘å®šåè®®å¯¹è±¡*/
     channel->iprotocol = iprotocol;
-    /*Ğ­Òé¶ÔÏóÒ²°ó¶¨Í¨µÀ*/
+    /*åè®®å¯¹è±¡ä¹Ÿç»‘å®šé€šé“*/
     iprotocol->channel = channel;
 
-    /*Role¶ÔÏó°ó¶¨Ğ­Òé¶ÔÏó*/
+    /*Roleå¯¹è±¡ç»‘å®šåè®®å¯¹è±¡*/
     irole->protocol = iprotocol;
-    /*Ğ­Òé¶ÔÏó°ó¶¨Role¶ÔÏó*/
+    /*åè®®å¯¹è±¡ç»‘å®šRoleå¯¹è±¡*/
     iprotocol->role = irole;
 
-    /*½«Ğ­Òé¶ÔÏó¼ÓÈë¿ò¼ÜÖĞ*/
+    /*å°†åè®®å¯¹è±¡åŠ å…¥æ¡†æ¶ä¸­*/
     ZinxKernel::Zinx_Add_Proto(*iprotocol);
 
-    /*½«Íæ¼Ò¶ÔÏó¼ÓÈë¿ò¼ÜÖĞ*/
+    /*å°†ç©å®¶å¯¹è±¡åŠ å…¥æ¡†æ¶ä¸­*/
     ZinxKernel::Zinx_Add_Role(*irole);
 
     return channel;

@@ -185,12 +185,12 @@ bool NameGenerator::SaveNamesToRedis() {
         }
     }
     
-    std::cout << "姓名数据已保存到Redis" << std::endl;
+    std::cout << "姓名数据宸蹭繚瀛樺埌Redis" << std::endl;
     return true;
 }
 
 bool NameGenerator::Initialize(const std::string& config_dir) {
-    // 如果已经初始化过，直接返回
+    // 濡傛灉已经初始化囷紝鐩存帴斿洖
     if (initialized && !first_names.empty() && !last_names.empty()) {
         std::cout << "[NameGenerator] 已经初始化，跳过重复初始化" << std::endl;
         return true;
@@ -203,25 +203,25 @@ bool NameGenerator::Initialize(const std::string& config_dir) {
     // 尝试连接Redis
     ConnectRedis();
     
-    // 尝试从Redis加载
+    // 尝试从嶳edis加载
     if (redis_connected && LoadNamesFromRedis()) {
         std::cout << "从Redis成功加载姓名数据" << std::endl;
         return true;
     }
     
-    // 如果Redis加载失败，从文件加载
+    // 濡傛灉Redis加载失败，屼粠文件加载
     std::cout << "尝试从文件加载姓名数据..." << std::endl;
     if (!LoadNamesFromFile()) {
         std::cerr << "无法从文件加载姓名数据，路径: " << config_path << std::endl;
         return false;
     }
     
-    // 如果Redis连接成功，将数据保存到Redis
+    // 濡傛灉Redis连接成功，屽皢数据保存到癛edis
     if (redis_connected) {
         SaveNamesToRedis();
     }
     
-    std::cout << "[NameGenerator] 初始化成功，姓氏数量: " << first_names.size() 
+    std::cout << "[NameGenerator] 初始化成功，屽撴皬数量: " << first_names.size() 
               << ", 名字数量: " << last_names.size() << std::endl;
     initialized = true;
     return true;
@@ -235,7 +235,7 @@ std::string NameGenerator::GenerateRandomName() {
         return "test";  // 如果数据未加载，返回默认值
     }
     
-    // 随机选择姓氏和名字
+    // 闅忔満閫夋嫨姓氏鍜屽悕瀛
     std::uniform_int_distribution<> first_dist(0, first_names.size() - 1);
     std::uniform_int_distribution<> last_dist(0, last_names.size() - 1);
     
@@ -243,7 +243,7 @@ std::string NameGenerator::GenerateRandomName() {
     int last_idx = last_dist(gen);
     
     std::string name = first_names[first_idx] + last_names[last_idx];
-    std::cout << "生成随机姓名: " << name << " (姓氏索引: " << first_idx 
+    std::cout << "鐢熸垚闅忔満姓名: " << name << " (姓氏索引: " << first_idx 
               << ", 名字索引: " << last_idx << ")" << std::endl;
     std::cout.flush();
     return name;

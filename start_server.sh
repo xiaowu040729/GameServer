@@ -149,6 +149,25 @@ compile_server() {
     
     cd "$GAME_SERVER_DIR" || exit 1
     
+    # 清理之前的编译产物
+    print_info "清理之前的编译产物..."
+    if [ -f "$BINARY_NAME" ]; then
+        rm -f "$BINARY_NAME"
+        print_info "已删除旧的可执行文件: $BINARY_NAME"
+    fi
+    
+    # 清理 .o 文件
+    find . -maxdepth 1 -name "*.o" -type f -delete 2>/dev/null
+    if [ $? -eq 0 ]; then
+        print_info "已清理 .o 文件"
+    fi
+    
+    # 清理旧的编译日志（可选，保留最近一次）
+    if [ -f "$LOG_DIR/compile.log" ]; then
+        mv "$LOG_DIR/compile.log" "$LOG_DIR/compile.log.old" 2>/dev/null
+        print_info "已备份旧的编译日志"
+    fi
+    
     # 检查源文件
     SOURCE_FILES=(
         "main.cpp"
@@ -161,28 +180,62 @@ compile_server() {
         "msg.pb.cc"
     )
     
+    print_info "检查源文件..."
     for file in "${SOURCE_FILES[@]}"; do
         if [ ! -f "$file" ]; then
             print_error "源文件不存在: $file"
             exit 1
         fi
     done
+    print_info "所有源文件检查完成"
     
     # 编译命令
     # 注意：需要根据实际的库路径调整 -L 和 -I 参数
-    print_info "执行编译..."
+    print_info "开始执行编译..."
+    print_info "编译日志将保存到: $LOG_DIR/compile.log"
     
+    # 确保日志目录存在
+    mkdir -p "$LOG_DIR"
+    
+    # 记录编译开始时间（同时输出到终端和文件）
+    {
+        echo "========================================="
+        echo "编译开始时间: $(date '+%Y-%m-%d %H:%M:%S')"
+        echo "========================================="
+        echo ""
+    } | tee -a "$LOG_DIR/compile.log"
+    
+    # 执行编译，同时输出到终端和日志文件
+    # 使用 unbuffered 模式确保实时输出
     g++ -std=c++11 -pthread \
         -o "$BINARY_NAME" \
         "${SOURCE_FILES[@]}" \
         -lzinx -lprotobuf -lpthread -lhiredis \
-        2>&1 | tee "$LOG_DIR/compile.log"
+        2>&1 | tee -a "$LOG_DIR/compile.log"
     
-    if [ $? -eq 0 ]; then
+    COMPILE_EXIT_CODE=${PIPESTATUS[0]}
+    
+    # 记录编译结束时间（同时输出到终端和文件）
+    {
+        echo ""
+        echo "========================================="
+        echo "编译结束时间: $(date '+%Y-%m-%d %H:%M:%S')"
+        if [ $COMPILE_EXIT_CODE -eq 0 ]; then
+            echo "编译状态: 成功"
+        else
+            echo "编译状态: 失败 (退出码: $COMPILE_EXIT_CODE)"
+        fi
+        echo "========================================="
+    } | tee -a "$LOG_DIR/compile.log"
+    
+    if [ $COMPILE_EXIT_CODE -eq 0 ]; then
         print_info "编译成功！"
         chmod +x "$BINARY_PATH"
+        print_info "可执行文件: $BINARY_PATH"
+        print_info "编译日志: $LOG_DIR/compile.log"
     else
-        print_error "编译失败，请查看日志: $LOG_DIR/compile.log"
+        print_error "编译失败，退出码: $COMPILE_EXIT_CODE"
+        print_error "请查看编译日志: $LOG_DIR/compile.log"
         exit 1
     fi
 }
@@ -234,11 +287,9 @@ start_server() {
         exit 1
     fi
     
-    # 检查可执行文件
-    if [ ! -f "$BINARY_PATH" ]; then
-        print_warn "可执行文件不存在，开始编译..."
+    # 总是重新编译以确保代码最新
+    print_info "开始编译服务器..."
         compile_server
-    fi
     
     print_info "启动服务器..."
     print_info "端口: $PORT"
@@ -376,9 +427,9 @@ main() {
             echo "用法: $0 {start|stop|restart|status|logs|compile|redis}"
             echo ""
             echo "命令说明:"
-            echo "  start   - 启动服务器（如果未编译则先编译，自动启动Redis）"
+            echo "  start   - 启动服务器（总是重新编译，自动启动Redis）"
             echo "  stop    - 停止服务器"
-            echo "  restart - 重启服务器"
+            echo "  restart - 重启服务器（总是重新编译）"
             echo "  status  - 查看服务器状态"
             echo "  logs    - 查看服务器日志（实时）"
             echo "  compile - 仅编译服务器"

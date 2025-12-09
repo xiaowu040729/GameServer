@@ -55,7 +55,7 @@ git push -u origin main
 2. 或者配置SSH密钥（推荐）
    ```bash
    # 生成SSH密钥
-   ssh-keygen -t ed25519 -C "your_email@example.com"
+   ssh-keygen -t ed25519 -C "3108283618@qq.com"
    
    # 复制公钥
    cat ~/.ssh/id_ed25519.pub
@@ -73,6 +73,6 @@ git push -u origin main
 # 修改代码后
 git add .
 git commit -m "描述你的更改"
-git push
+git push --set-upstream origin main
 ```
 

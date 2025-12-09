@@ -3,10 +3,10 @@
 #include<list>
 #include<vector>
 using namespace std;
-/*Íæ¼Ò*/
+/*ç©å®¶*/
 class Player {
 public:
-	/*·µ»Ø×ø±êÎ»ÖÃ*/
+	/*è¿”å›åæ ‡ä½ç½®*/
 	virtual int GetX() = 0;
 	virtual int GetY() = 0;
 	
@@ -21,18 +21,18 @@ class Grid {
 public:
 	int x;
 	int y;
-	/*Ò»¸ö¸ñ×ÓÀï¿ÉÄÜÓĞ¶à¸öÍæ¼Ò*/
+	/*ä¸€ä¸ªæ ¼å­é‡Œå¯èƒ½æœ‰å¤šä¸ªç©å®¶*/
 	list<Player*> players;
 private:
 	
 };
 
-/*Area Of IntrestËã·¨*/
-/*¿ÉÒÔ¿´×öÒ»¿éµØÍ¼*/
+/*Area Of Interestç®—æ³•*/
+/*å¯ä»¥çœ‹ä½œä¸€å—åœ°å›¾*/
 class AOIWORLD
 {
 private:
-	/*µØÍ¼µÄÏà¹ØÏ¸½Ú*/
+	/*åœ°å›¾çš„ç›¸å…³ç»†èŠ‚*/
 	int w_xbegin;
 	int w_xend;
 	int w_ybegin;
@@ -44,18 +44,18 @@ private:
 public:
 	AOIWORLD(int xbegin,int xend,int ybegin,int yend,int xcount,int ycount);
 	~AOIWORLD();
-	/*Ò»¿éµØÍ¼ÀïÓĞ¶à¸ö¸ñ×Ó*/
+	/*ä¸€å—åœ°å›¾é‡Œæœ‰å¤šä¸ªæ ¼å­*/
 	vector<Grid*> AOIWorld;
 	
-	/*Ìí¼ÓÍæ¼Ò*/
+	/*æ·»åŠ ç©å®¶*/
 	bool AddPlayer(Player * _player);
 
-	/*É¾³ıÍæ¼Ò*/
+	/*åˆ é™¤ç©å®¶*/
 	void DeletePlayer(Player * _player);
 
-	/*»ñÈ¡ÖÜÎ§Íæ¼Ò*/
+	/*è·å–å‘¨å›´ç©å®¶*/
 	list<Player *> SurroundPlayers(Player* _player);
 
-	/**/
+	/*æ·»åŠ ç©å®¶*/
 };
 

@@ -6,15 +6,15 @@
 
 
 class GameProtocol;
-/*ÒµÎñ²ã£ºÓÃÓÚ¶ÔÏó´¦ÀíÒµÎñ*/
+/*ä¸šåŠ¡å±‚ï¼šç”¨äºå¯¹è±¡å¤„ç†ä¸šåŠ¡*/
 class GameRole :
     public Irole,public Player
 {
 private:
     float x = 0;
-    float y = 0;    /*¸ß*/
+    float y = 0;    /*é«˜*/
     float z = 0;
-    float v = 0;    /*ÊÓ½Ç*/
+    float v = 0;    /*è§†è§’*/
     int id = 0;
     string usrname;
     void ViewAppear(GameRole* _pRole);
@@ -23,25 +23,25 @@ private:
 public:
     GameRole();
     ~GameRole();
-    /*Òª°ó¶¨µÄĞ­Òé¶ÔÏó*/
+    /*è¦ç»‘å®šçš„åè®®å¯¹è±¡*/
     GameProtocol* protocol;
 
     bool Init() override;
     UserData* ProcMsg(UserData& _poUserData) override;
     void Fini() override;
-    /*ĞÂ¿Í»§Á¬½Óºó´´½¨Á¬½ÓĞÅÏ¢ÈçID NameµÈ*/
+    /*æ–°å®¢æˆ·è¿æ¥ååˆ›å»ºè¿æ¥ä¿¡æ¯å¦‚ID Nameç­‰*/
     GameMsg* CreatLoginMsg();
-    /*¸øÆä·¢ËÍÖÜÎ§Íæ¼ÒµÄĞÅÏ¢*/
+    /*ç»™å…¶å‘é€å‘¨å›´ç©å®¶çš„ä¿¡æ¯*/
     GameMsg* SendOthersToPlayer();
-    /*ÏòÖÜÎ§Íæ¼Ò·¢ËÍ×Ô¼ºµÄÎ»ÖÃ*/
+    /*å‘å‘¨å›´ç©å®¶å‘é€è‡ªå·±çš„ä½ç½®*/
     GameMsg* SendPlayerToOthers();
-    /*Íæ¼ÒÏÂÏßÍ¨Öª*/
+    /*ç©å®¶ä¸‹çº¿é€šçŸ¥*/
     GameMsg* CreateLogoutMsg();
-    /*·¢ËÍÁÄÌìÏûÏ¢*/
+    /*å‘é€èŠå¤©æ¶ˆæ¯*/
     GameMsg* SendBroadCast(string content);
 
 
-    // Í¨¹ı Player ¼Ì³Ğ
+    // é€šè¿‡ Player ç»§æ‰¿
     int GetX() override;
     int GetY() override;
 

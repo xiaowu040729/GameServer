@@ -1,14 +1,14 @@
 #include "AOI.h"
 
 
-/*³õÊ¼»¯*/
+/*åˆå§‹åŒ–*/
 AOIWORLD::AOIWORLD(int xbegin, int xend, int ybegin, int yend, int xcount, int ycount) :w_xbegin(xbegin), w_xend(xend), w_ybegin(ybegin), w_yend(yend), x_count(xcount), y_count(ycount)
 {
 	
 	x_width =(w_xend - w_xbegin) / x_count ;
 	y_width = (w_yend - w_ybegin) / y_count;
 	
-	/*´´½¨¸ñ×Ó*/
+	/*åˆ›å»ºæ ¼å­*/
 	for (int i = 1; i <= x_count * y_count; i++)
 	{
 		Grid *grid =  new Grid();
@@ -24,91 +24,91 @@ AOIWORLD::~AOIWORLD()
 	}
 }
 
-/*Ìí¼ÓÍæ¼Ò*/
+/*æ·»åŠ ç©å®¶*/
 bool AOIWORLD::AddPlayer(Player* _player)
 {
-	/*¼ÆËãÍæ¼ÒÎ»ÖÃ*/
+	/*è®¡ç®—ç©å®¶ä½ç½®*/
 	int grid = (_player->GetX() - w_xbegin) / x_width + ((_player->GetY() - w_ybegin) / y_width) * x_count;
-	/*°ÑÍæ¼Ò¼ÓÈëAOIWorldÖĞ*/
+	/*æŠŠç©å®¶åŠ å…¥AOIWorldä¸­*/
 	AOIWorld[grid]->players.push_back(_player);
 	return true;
 }
 
-/*É¾³ıÍæ¼Ò*/
+/*åˆ é™¤ç©å®¶*/
 void AOIWORLD::DeletePlayer(Player* _player)
 {
 	int grid = (_player->GetX() - w_xbegin) / x_width + ((_player->GetY() - w_ybegin) / y_width) * x_count;
-	/*°ÑÍæ¼Ò¼ÓÈëAOIWorldÖĞ*/
+	/*æŠŠç©å®¶åŠ å…¥AOIWorldä¸­*/
 	AOIWorld[grid]->players.remove(_player);
 }
 
-/*ÏÔÊ¾ÖÜÎ§Íæ¼Ò*/
+/*æ˜¾ç¤ºå‘¨å›´ç©å®¶*/
 list<Player*> AOIWORLD::SurroundPlayers(Player * _player)
 {
 	list<Player*> surround_players;
-	/*¼ÆËãÍæ¼ÒËùÔÚµÄ¸ñ×Ó*/
+	/*è®¡ç®—ç©å®¶æ‰€åœ¨çš„æ ¼å­*/
 	int grid = (_player->GetX() - w_xbegin) / x_width + ((_player->GetY() - w_ybegin) / y_width) * x_count;
 	
-	/*Íæ¼ÒËùÔÚ¸ñ×ÓµÄxµÄ¸ñ×ÓµÄÊıÁ¿ºÍy¸ñ×ÓµÄÊıÁ¿*/
+	/*ç©å®¶æ‰€åœ¨æ ¼å­çš„xçš„æ ¼å­çš„æ•°é‡å’Œyæ ¼å­çš„æ•°é‡*/
 	int x_index = grid % x_count;
 	int y_index = grid / x_count;
 
-	/*ÅĞ¶Ï¸ñ×ÓÊÇ·ñÊÇÔÚÌØÊâÎ»ÖÃÈç£º×óÉÏ½Ç£¬×óÏÂ½Ç£¬ÓÒÉÏ½Ç£¬ÓÒÏÂ½Ç*/
-	/*¸Ã¸ñ×ÓµÄ×óÉÏ½ÇÊÇºÏ·¨µÄ*/
+	/*åˆ¤æ–­æ ¼å­æ˜¯å¦æ˜¯åœ¨ç‰¹æ®Šä½ç½®å¦‚ï¼šå·¦ä¸Šè§’ï¼Œå·¦ä¸‹è§’ï¼Œå³ä¸Šè§’ï¼Œå³ä¸‹è§’*/
+	/*è¯¥æ ¼å­çš„å·¦ä¸Šè§’æ˜¯åˆæ³•çš„*/
 	if (x_index > 0 && y_index > 0)		
 	{
-		/*»ñÈ¡ÖÜÎ§Íæ¼Ò ²¢ÇÒ°ÑÍæ¼Ò·ÅÈëÒ»¸ölistÖĞ*/
+		/*è·å–å‘¨å›´ç©å®¶ å¹¶ä¸”æŠŠç©å®¶æ”¾å…¥ä¸€ä¸ªlistä¸­*/
 		list<Player*> &tmp = AOIWorld[grid - x_count - 1]->players;
 		surround_players.insert(surround_players.begin(),tmp.begin(),tmp.end() );
 	}
 
-	/*Í·¶¥ÉÏµÄ¸ñ×ÓÊÇºÏ·¨µÄ*/
+	/*å¤´é¡¶ä¸Šçš„æ ¼å­æ˜¯åˆæ³•çš„*/
 	if (y_index > 0)		
 	{
 		list<Player*>& tmp = AOIWorld[grid - x_count]->players;
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 	}
 
-	/*ÓÒÉÏ½Ç¸ñ×ÓÊÇºÏ·¨µÄ*/
+	/*å³ä¸Šè§’æ ¼å­æ˜¯åˆæ³•çš„*/
 	if (x_index < x_count - 1 && y_index > 0)
 	{
 		list<Player*>& tmp = AOIWorld[grid - x_count + 1]->players;
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 	}
 
-	/*×ó±ßµÄ¸ñ×ÓÊÇºÏ·¨µÄ*/
+	/*å·¦è¾¹çš„æ ¼å­æ˜¯åˆæ³•çš„*/
 	if (x_index > 0)	
 	{
 		list<Player*>& tmp = AOIWorld[grid - 1]->players;
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 	}
 
-	/*Íæ¼Ò×ÔÉíµÄ¸ñ×ÓÊÇºÏ·¨µÄ*/
+	/*ç©å®¶è‡ªèº«çš„æ ¼å­æ˜¯åˆæ³•çš„*/
 	list<Player*>& tmp = AOIWorld[grid]->players;
 	surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 
-	/*Íæ¼ÒÓÒ±ßµÄ¸ñ×ÓÊÇºÏ·¨µÄ*/
+	/*ç©å®¶å³è¾¹çš„æ ¼å­æ˜¯åˆæ³•çš„*/
 	if (x_index < x_count - 1)		
 	{
 		list<Player*>& tmp = AOIWorld[grid + 1]->players;
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 	}
 
-	/*Íæ¼Ò×óÏÂ½ÇµÄ¸ñ×ÓÊÇºÏ·¨µÄ*/
+	/*ç©å®¶å·¦ä¸‹è§’çš„æ ¼å­æ˜¯åˆæ³•çš„*/
 	if (x_index > 0 && y_index < y_count - 1)		
 	{
 		list<Player*>& tmp = AOIWorld[grid + x_count - 1]->players;
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 	}
 
-	/*Íæ¼ÒÏÂ·½µÄ¸ñ×ÓÊÇºÏ·¨µÄ*/
+	/*ç©å®¶ä¸‹æ–¹çš„æ ¼å­æ˜¯åˆæ³•çš„*/
 	if (y_index < y_count - 1)		
 	{
 		list<Player*>& tmp = AOIWorld[grid + x_count]->players;
 		surround_players.insert(surround_players.begin(), tmp.begin(), tmp.end());
 	}
 
-	/*Íæ¼ÒÓÒÏÂ½ÇµÄ¸ñ×ÓÊÇºÏ·¨µÄ*/
+	/*ç©å®¶å³ä¸‹è§’çš„æ ¼å­æ˜¯åˆæ³•çš„*/
 	if (x_index < x_count - 1 && y_index < y_count - 1)			
 	{
 		list<Player*>& tmp = AOIWorld[grid + x_count + 1]->players;
