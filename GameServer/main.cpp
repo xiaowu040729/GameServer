@@ -1,55 +1,30 @@
-﻿#include<zinx.h>
+#include<zinx.h>
 #include"GameChannel.h"
 #include"GameMsg.h"
 #include"msg.pb.h"
+#include"AOI.h"
+#include"NameGenerator.h"
+#include<iostream>
+
+
 
 
 int main()
 {
-	///*调试AOI功能*/
-	//{
-	//	AOIWORLD w(20, 200, 50, 230, 6, 6);
-	//	MyPlayer p1(60, 107, "1");
-	//	MyPlayer p2(91, 118, "2");
-	//	MyPlayer p3(147, 133, "3");
-
-	//	w.AddPlayer(&p1);
-	//	w.AddPlayer(&p2);
-	//	w.AddPlayer(&p3);
-
-	//	auto list_1 = w.SurroundPlayers(&p1);
-	//	for (auto single : list_1)
-	//	{
-	//		dynamic_cast<MyPlayer*> (single);
-	//		cout << dynamic_cast<MyPlayer*> (single)->GetName() << endl;
-	//	}
-	//}
-
-
-	///*调试*/
-	//{
-	//	pb::SyncPid* pg = new pb::SyncPid();
-	//	pg->set_pid(1);
-	//	pg->set_username("test");
-	//	GameMsg gm(GameMsg::MSG_TYPE::MSG_TYPE_LOGIN_ID_NAME, pg);
-	//	auto output = gm.Serialize_msg();
-
-	//	for (auto byte : output)
-	//	{
-	//		printf("%02X ", byte);
-	//	}
-
-	//	puts("");
-
-	//	char buff[] = { 0x08, 0x01, 0x12, 0x04 ,0x74, 0x65, 0x73, 0x74 };
-	//	std::string input(buff, sizeof(buff));
-
-	//	auto ingm = GameMsg(GameMsg::MSG_TYPE_LOGIN_ID_NAME, input);
-	//	std::cout << dynamic_cast<pb::SyncPid*> (ingm.pMsg)->pid() << std::endl;
-	//	std::cout << dynamic_cast<pb::SyncPid*> (ingm.pMsg)->username() << std::endl;
-	//}
 	
-
+	
+	/*初始化姓名生成器（从Redis或文件加载姓名数据）*/
+	NameGenerator* name_gen = NameGenerator::GetInstance();
+	// 使用相对于可执行文件的路径，或者绝对路径
+	// 假设可执行文件在GameServer目录，config在项目根目录
+	std::string config_path = "../config";
+	// 如果从项目根目录运行，使用相对路径
+	// 如果从GameServer目录运行，使用../config
+	if (!name_gen->Initialize(config_path)) {
+		std::cerr << "姓名生成器初始化失败，将使用默认姓名" << std::endl;
+		std::cerr << "尝试的路径: " << config_path << std::endl;
+	}
+	
 	/*初始化框架*/
 	ZinxKernel::ZinxKernelInit();
 	/*添加监听通道，监听tcp请求*/
@@ -58,5 +33,9 @@ int main()
 	ZinxKernel::Zinx_Run();
 	/*消除初始化*/
 	ZinxKernel::ZinxKernelFini();
+	
+	/*清理姓名生成器*/
+	NameGenerator::DestroyInstance();
 	return 0;
 }
+

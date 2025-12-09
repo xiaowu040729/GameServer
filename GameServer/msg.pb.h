@@ -49,9 +49,9 @@ namespace pb {
 class BroadCast;
 class BroadCastDefaultTypeInternal;
 extern BroadCastDefaultTypeInternal _BroadCast_default_instance_;
-class MovePackege;
-class MovePackegeDefaultTypeInternal;
-extern MovePackegeDefaultTypeInternal _MovePackege_default_instance_;
+class MovePackage;
+class MovePackageDefaultTypeInternal;
+extern MovePackageDefaultTypeInternal _MovePackage_default_instance_;
 class Player;
 class PlayerDefaultTypeInternal;
 extern PlayerDefaultTypeInternal _Player_default_instance_;
@@ -71,7 +71,7 @@ extern TalkDefaultTypeInternal _Talk_default_instance_;
 namespace google {
 namespace protobuf {
 template<> ::pb::BroadCast* Arena::CreateMaybeMessage<::pb::BroadCast>(Arena*);
-template<> ::pb::MovePackege* Arena::CreateMaybeMessage<::pb::MovePackege>(Arena*);
+template<> ::pb::MovePackage* Arena::CreateMaybeMessage<::pb::MovePackage>(Arena*);
 template<> ::pb::Player* Arena::CreateMaybeMessage<::pb::Player>(Arena*);
 template<> ::pb::Position* Arena::CreateMaybeMessage<::pb::Position>(Arena*);
 template<> ::pb::SyncPid* Arena::CreateMaybeMessage<::pb::SyncPid>(Arena*);
@@ -572,24 +572,24 @@ class Position : public ::google::protobuf::Message /* @@protoc_insertion_point(
 };
 // -------------------------------------------------------------------
 
-class MovePackege : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:pb.MovePackege) */ {
+class MovePackage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:pb.MovePackage) */ {
  public:
-  MovePackege();
-  virtual ~MovePackege();
+  MovePackage();
+  virtual ~MovePackage();
 
-  MovePackege(const MovePackege& from);
+  MovePackage(const MovePackage& from);
 
-  inline MovePackege& operator=(const MovePackege& from) {
+  inline MovePackage& operator=(const MovePackage& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  MovePackege(MovePackege&& from) noexcept
-    : MovePackege() {
+  MovePackage(MovePackage&& from) noexcept
+    : MovePackage() {
     *this = ::std::move(from);
   }
 
-  inline MovePackege& operator=(MovePackege&& from) noexcept {
+  inline MovePackage& operator=(MovePackage&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -599,34 +599,34 @@ class MovePackege : public ::google::protobuf::Message /* @@protoc_insertion_poi
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const MovePackege& default_instance();
+  static const MovePackage& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const MovePackege* internal_default_instance() {
-    return reinterpret_cast<const MovePackege*>(
-               &_MovePackege_default_instance_);
+  static inline const MovePackage* internal_default_instance() {
+    return reinterpret_cast<const MovePackage*>(
+               &_MovePackage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     4;
 
-  void Swap(MovePackege* other);
-  friend void swap(MovePackege& a, MovePackege& b) {
+  void Swap(MovePackage* other);
+  friend void swap(MovePackage& a, MovePackage& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline MovePackege* New() const final {
-    return CreateMaybeMessage<MovePackege>(NULL);
+  inline MovePackage* New() const final {
+    return CreateMaybeMessage<MovePackage>(NULL);
   }
 
-  MovePackege* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<MovePackege>(arena);
+  MovePackage* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<MovePackage>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const MovePackege& from);
-  void MergeFrom(const MovePackege& from);
+  void CopyFrom(const MovePackage& from);
+  void MergeFrom(const MovePackage& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -643,7 +643,7 @@ class MovePackege : public ::google::protobuf::Message /* @@protoc_insertion_poi
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(MovePackege* other);
+  void InternalSwap(MovePackage* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -677,7 +677,7 @@ class MovePackege : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::google::protobuf::int32 actiondata() const;
   void set_actiondata(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:pb.MovePackege)
+  // @@protoc_insertion_point(class_scope:pb.MovePackage)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -1296,44 +1296,44 @@ inline void Position::set_bloodvalue(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
-// MovePackege
+// MovePackage
 
 // .pb.Position P = 1;
-inline bool MovePackege::has_p() const {
+inline bool MovePackage::has_p() const {
   return this != internal_default_instance() && p_ != NULL;
 }
-inline void MovePackege::clear_p() {
+inline void MovePackage::clear_p() {
   if (GetArenaNoVirtual() == NULL && p_ != NULL) {
     delete p_;
   }
   p_ = NULL;
 }
-inline const ::pb::Position& MovePackege::_internal_p() const {
+inline const ::pb::Position& MovePackage::_internal_p() const {
   return *p_;
 }
-inline const ::pb::Position& MovePackege::p() const {
+inline const ::pb::Position& MovePackage::p() const {
   const ::pb::Position* p = p_;
-  // @@protoc_insertion_point(field_get:pb.MovePackege.P)
+  // @@protoc_insertion_point(field_get:pb.MovePackage.P)
   return p != NULL ? *p : *reinterpret_cast<const ::pb::Position*>(
       &::pb::_Position_default_instance_);
 }
-inline ::pb::Position* MovePackege::release_p() {
-  // @@protoc_insertion_point(field_release:pb.MovePackege.P)
+inline ::pb::Position* MovePackage::release_p() {
+  // @@protoc_insertion_point(field_release:pb.MovePackage.P)
   
   ::pb::Position* temp = p_;
   p_ = NULL;
   return temp;
 }
-inline ::pb::Position* MovePackege::mutable_p() {
+inline ::pb::Position* MovePackage::mutable_p() {
   
   if (p_ == NULL) {
     auto* p = CreateMaybeMessage<::pb::Position>(GetArenaNoVirtual());
     p_ = p;
   }
-  // @@protoc_insertion_point(field_mutable:pb.MovePackege.P)
+  // @@protoc_insertion_point(field_mutable:pb.MovePackage.P)
   return p_;
 }
-inline void MovePackege::set_allocated_p(::pb::Position* p) {
+inline void MovePackage::set_allocated_p(::pb::Position* p) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete p_;
@@ -1349,21 +1349,21 @@ inline void MovePackege::set_allocated_p(::pb::Position* p) {
     
   }
   p_ = p;
-  // @@protoc_insertion_point(field_set_allocated:pb.MovePackege.P)
+  // @@protoc_insertion_point(field_set_allocated:pb.MovePackage.P)
 }
 
 // int32 ActionData = 2;
-inline void MovePackege::clear_actiondata() {
+inline void MovePackage::clear_actiondata() {
   actiondata_ = 0;
 }
-inline ::google::protobuf::int32 MovePackege::actiondata() const {
-  // @@protoc_insertion_point(field_get:pb.MovePackege.ActionData)
+inline ::google::protobuf::int32 MovePackage::actiondata() const {
+  // @@protoc_insertion_point(field_get:pb.MovePackage.ActionData)
   return actiondata_;
 }
-inline void MovePackege::set_actiondata(::google::protobuf::int32 value) {
+inline void MovePackage::set_actiondata(::google::protobuf::int32 value) {
   
   actiondata_ = value;
-  // @@protoc_insertion_point(field_set:pb.MovePackege.ActionData)
+  // @@protoc_insertion_point(field_set:pb.MovePackage.ActionData)
 }
 
 // -------------------------------------------------------------------

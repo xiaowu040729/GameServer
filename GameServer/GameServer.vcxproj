@@ -91,6 +91,9 @@
     <ClInclude Include="GameRole.h" />
     <ClInclude Include="msg.pb.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="msg.proto" />
+  </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
       <LibraryDependencies>zinx;pthread;protobuf</LibraryDependencies>

@@ -61,3 +61,17 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+###############################################################################
+# 确保所有源文件使用UTF-8编码
+###############################################################################
+*.cpp text eol=lf charset=utf-8
+*.h text eol=lf charset=utf-8
+*.cc text eol=lf charset=utf-8
+*.hpp text eol=lf charset=utf-8
+*.c text eol=lf charset=utf-8
+*.py text eol=lf charset=utf-8
+*.sh text eol=lf charset=utf-8
+*.md text eol=lf charset=utf-8
+*.txt text eol=lf charset=utf-8
+*.proto text eol=lf charset=utf-8

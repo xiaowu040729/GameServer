@@ -14,7 +14,7 @@ GameMsg::GameMsg(MSG_TYPE _msgtype, google::protobuf::Message* _pMsg):msgtype(_m
 
 GameMsg::GameMsg(MSG_TYPE _msgtype, std::string _stream) : msgtype(_msgtype)
 {
-	/*通过消息工厂创建消息对象*/
+	/*閫氳繃娑堟伅宸ュ巶鍒涘缓娑堟伅瀵硅薄*/
 	switch (_msgtype)
 	{
 		case GameMsg::MSG_TYPE_LOGIN_ID_NAME:
@@ -53,7 +53,7 @@ GameMsg::GameMsg(MSG_TYPE _msgtype, std::string _stream) : msgtype(_msgtype)
 		}
 
 	}
-	/*将参数解析成对象内容  ba把_stream放入pmsg*/
+	/*灏嗗弬鏁拌В鏋愭垚瀵硅薄鍐呭  ba鎶奯stream鏀惧叆pmsg*/
 	pMsg->ParseFromString(_stream);
 
 }

@@ -14,50 +14,50 @@ GameProtocol::~GameProtocol()
     }
 }
 
-/*·µ»Ø×ª»»ºóµÄÏûÏ¢¶ÔÏóMultMsg*/
+/*è¿”å›è½¬æ¢åçš„æ¶ˆæ¯å¯¹è±¡MultMsg*/
 UserData* GameProtocol::raw2request(std::string _szInput)
 {
    MultMsgs* res =  new MultMsgs();
-    /*Ç°ËÄ¸ö×Ö½Ú ËÄµ½°Ë×Ö½Ú·Ö±ğÊÇ ÏûÏ¢³¤¶È ÏûÏ¢ID*/
+    /*å‰å››ä¸ªå­—èŠ‚ å››åˆ°å…«å­—èŠ‚åˆ†åˆ«æ˜¯ æ¶ˆæ¯é•¿åº¦ æ¶ˆæ¯ID*/
     msg.append(_szInput);
-    /*²»Í£µÄ´¦ÀíÊı¾İ*/
+    /*ä¸åœçš„å¤„ç†æ•°æ®*/
     while (1)
     {
-        /*Èç¹û´Ë´Î´«ÈëµÄ×Ö½ÚÊı<8ÄÇÃ´¾ÍÖ±½ÓµÈÏÂÒ»´ÎÊı¾İµ½´ïÔÙ´¦Àí*/
+        /*å¦‚æœæ­¤æ¬¡ä¼ å…¥çš„å­—èŠ‚æ•°<8é‚£ä¹ˆå°±ç›´æ¥ç­‰ä¸‹ä¸€æ¬¡æ•°æ®åˆ°è¾¾å†å¤„ç†*/
         if (msg.size() < 8)
         {
             break;
         }
 
-        /*´¦ÀíÇ°ËÄ¸ö×Ö½Ú*/
+        /*å¤„ç†å‰å››ä¸ªå­—èŠ‚*/
         int Byte_front_4 = 0;
         Byte_front_4 |= msg[0] << 0;
         Byte_front_4 |= msg[1] << 8;
         Byte_front_4 |= msg[2] << 16;
         Byte_front_4 |= msg[3] << 24;
 
-        /*´¦Àí4µ½8¸ö×Ö½Ú*/
+        /*å¤„ç†4åˆ°8ä¸ªå­—èŠ‚*/
         int Byte_4_to_8 = 0;
         Byte_4_to_8 |= msg[4] << 0;
         Byte_4_to_8 |= msg[5] << 8;
         Byte_4_to_8 |= msg[6] << 16;
         Byte_4_to_8 |= msg[7] << 24;
 
-        /*ÅĞ¶ÏºóĞø±¨ÎÄ³¤¶ÈÊÇ·ñºÏ·¨*/
+        /*åˆ¤æ–­åç»­æŠ¥æ–‡é•¿åº¦æ˜¯å¦åˆæ³•*/
         if (msg.size() - 8 < Byte_front_4)
         {
-            /*²»ºÏ·¨¾ÍµÈ´ıÏÂÒ»´Î²Ù×÷*/
+            /*ä¸åˆæ³•å°±ç­‰å¾…ä¸‹ä¸€æ¬¡æ“ä½œ*/
             break;
         }
 
-        /*¹¹ÔìÒ»ÌõÓÃ»§ÇëÇó*/
+        /*æ„é€ ä¸€æ¡ç”¨æˆ·è¯·æ±‚*/
         GameMsg* pmsg = new GameMsg((GameMsg::MSG_TYPE)Byte_4_to_8, msg.substr(8, Byte_front_4));
         res->msgs.push_back(pmsg);
 
-        /*µ¯³öÒÔ´¦Àí³É¹¦µÄ±¨ÎÄ*/
+        /*å¼¹å‡ºä»¥å¤„ç†æˆåŠŸçš„æŠ¥æ–‡*/
         msg.erase(0, 8 + Byte_front_4);
           
-        /*µ÷ÊÔ*/
+        /*è°ƒè¯•*/
       for (auto single : res->msgs)
         {   
             cout << single->pMsg->Utf8DebugString() << endl;
@@ -70,35 +70,35 @@ UserData* GameProtocol::raw2request(std::string _szInput)
 }
 
 
-/*²ÎÊıÀ´×ÔÒµÎñ²ã£¬´ı·¢ËÍµÄÊı¾İ£¬×ª»¯³É×Ö·û´®*/
+/*å‚æ•°æ¥è‡ªä¸šåŠ¡å±‚ï¼Œå¾…å‘é€çš„æ•°æ®ï¼Œè½¬åŒ–æˆå­—ç¬¦ä¸²*/
 std::string* GameProtocol::response2raw(UserData& _oUserData)
 {
 
     string *rstring = new string();
-    /*Òª·¢ËÍµÄ±¨ÎÄ×é³É*/
+    /*è¦å‘é€çš„æŠ¥æ–‡ç»„æˆ*/
     int length = 0;
     int id = 0;
     string rmsg;
     GET_REF2DATA(GameMsg, output, _oUserData);
     
-    /*³õÊ¼»¯±¨ÎÄ*/
+    /*åˆå§‹åŒ–æŠ¥æ–‡*/
     id = output.msgtype;
     rmsg = output.Serialize_msg();
     length = rmsg.size();
 
-    /*Ç°4¸ö×Ö½Ú·Å³¤¶ÈĞÅÏ¢,µÍ×Ö½ÚÔÚÇ°¸ß×Ö½ÚÔÚºó*/
+    /*å‰4ä¸ªå­—èŠ‚æ”¾é•¿åº¦ä¿¡æ¯,ä½å­—èŠ‚åœ¨å‰é«˜å­—èŠ‚åœ¨å*/
     rstring->push_back((length >> 0) & 0xff);
     rstring->push_back((length >> 8) & 0xff);
     rstring->push_back((length >> 16) & 0xff);
     rstring->push_back((length >> 24) & 0xff);
 
-    /*´¦ÀíµÚ5¸ö×Ö½Úµ½µÚ8¸ö×Ö½Ú*/
+    /*å¤„ç†ç¬¬5ä¸ªå­—èŠ‚åˆ°ç¬¬8ä¸ªå­—èŠ‚*/
     rstring->push_back((id >> 0) & 0xff);
     rstring->push_back((id >> 8) & 0xff);
     rstring->push_back((id >> 16) & 0xff);
     rstring->push_back((id >> 24) & 0xff);
 
-    /*Æ´½ÓµÚ7¸ö×Ö½ÚÒÔºóµÄÊı¾İ*/
+    /*æ‹¼æ¥ç¬¬7ä¸ªå­—èŠ‚ä»¥åçš„æ•°æ®*/
     rstring->append(rmsg);
 
 
@@ -108,13 +108,13 @@ std::string* GameProtocol::response2raw(UserData& _oUserData)
 
 Irole* GameProtocol::GetMsgProcessor(UserDataMsg& _oUserDataMsg)
 {
-    /*´¦ÀíÍêµÄÊı¾İÔÙ·µ»Ø¸ø¶ÔÏó*/
+    /*å¤„ç†å®Œçš„æ•°æ®å†è¿”å›ç»™å¯¹è±¡*/
     return role;
 }
 
-/*·µ»ØÊı¾İ·¢ËÍµÄÍ¨µÀ*/
+/*è¿”å›æ•°æ®å‘é€çš„é€šé“*/
 Ichannel* GameProtocol::GetMsgSender(BytesMsg& _oBytes)
 {
-    /*·µ»ØÍ¨µÀ¶ÔÏó*/
+    /*è¿”å›é€šé“å¯¹è±¡*/
     return channel;
 }

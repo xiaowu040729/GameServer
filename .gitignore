@@ -361,3 +361,30 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# GameServer specific
+GameServer/GameServer
+GameServer/*.o
+GameServer/*.so
+*.pid
+server.pid
+redis.pid
+
+# Logs
+logs/
+*.log
+
+# Build artifacts
+*.a
+*.so
+*.dylib
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 临时文件
+*.utf8
+fix_*.py
